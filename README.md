@@ -1,1 +1,1 @@
-# HA
+# Dokumentation for my Home Assistant Configuration
