@@ -1,0 +1,21 @@
+# Whitelist files/folders with !
+!*.yaml
+!.gitignore
+!*.md
+
+# Ignore folders.
+.storage
+.cloud
+.google.token
+.O365-token-cache
+notebooks
+themes
+tts
+
+# Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
+ip_bans.yaml
+secrets.yaml
+known_devices.yaml
+aircast.xml
+home-assistant.log
+o365_calendars.yaml

@@ -1,0 +1,474 @@
+################################################################################
+############################## -LOAD MODULES- ##################################
+################################################################################
+default_config:       # use default setup of Home Assistant (frontend, api, etc)
+frontend:
+  themes: !include_dir_merge_named themes # enable themes
+api:                  # expose a RESTful API for interaction with Home Assistant
+
+media_extractor:                 # enable to send a stream URL to a media player
+  default_query: best
+
+tts:                                                     # enable Text to speech
+  - platform: google_translate
+    cache: true
+    time_memory: 57600
+
+################################################################################
+############################## -Non GUI Setups- ################################
+################################################################################
+
+recorder:                     # enable storing details of entities in a database
+  db_url: !secret maria_db_url
+  purge_keep_days: 90
+  auto_purge: true
+  exclude:            # Eliminate anything that you never graph or refer back to
+    domains:
+      - automation
+      - updater
+      - sun
+    entity_globs:
+      - binary_sensor.phone_private_tillmann_*
+      - sensor.phone_private_tillmann_*
+      - sensor.iphone_*
+      - binary_sensor.*_update_available
+      - sensor.*_update_state
+      - sensor.date_*
+
+spotcast:
+  sp_dc: !secret sp_dc
+  sp_key: !secret sp_key
+
+spotify:
+  client_id: !secret spotify_client_id
+  client_secret: !secret spotify_client_secret
+
+media_player:
+  # Use the Python ADB implementation
+  - platform: androidtv
+    name: Fire TV
+    host: !secret firetv_ip
+#  - platform: snapcast
+#    host: !secret snapcast_livingroom_ip
+#  - platform: snapcast
+#    host: !secret snapcast_bedroom_ip
+#  - platform: snapcast
+#    host: !secret snapcast_redmi_ip
+
+sensor:
+  #  - platform: pocketcasts                   # will be added in next release?!
+  #    username: !secret pocketcasts_username
+  #    password: !secret pocketcasts_password
+  - platform: mqtt
+    name: "CPU Temperature - NUC"
+    unit_of_measurement: "°C"
+    state_topic: "pve/cpu_temp"
+    value_template: "{{ value | multiply(0.001) | round(1) }}"
+  - platform: time_date
+    display_options:
+      - "date_time_iso"
+  - platform: template
+    sensors:
+      bedroom_temperature_averaged:
+        unique_id: a92be664_af8e_42bf_81e9_7db3c8c5e1bc
+        friendly_name: "Temperature - Bedroom (averaged)"
+        unit_of_measurement: "°C"
+        value_template: '{{ ((float(state_attr("climate.0x60a423fffeab48cc_climate", "current_temperature"))+float(states("sensor.xiaomi_miio_device_temperature"))+float(states("sensor.0x00124b0022417d15_temperature")))/3)|round(2) }}'
+      bedroom_humidity_averaged:
+        unique_id: c568a3af_e5c6_44be_8a3c_91a83b5d6f1e
+        friendly_name: "Humidity - Bedroom (averaged)"
+        unit_of_measurement: "%"
+        value_template: '{{ ((float(states("sensor.xiaomi_miio_device_humidity"))+float(states("sensor.0x00124b0022417d15_humidity")))/2)|round(2) }}'
+      livingroom_temperature_averaged:
+        unique_id: 18183369_0735_4edf_aa36_9e75851ab13a
+        friendly_name: "Temperature - Livingroom (averaged)"
+        unit_of_measurement: "°C"
+        value_template: '{{ ((float(state_attr("climate.0x60a423fffeab43cc_climate", "current_temperature"))+float(state_attr("climate.0x60a423fffea0fd1c_climate", "current_temperature"))+float(states("sensor.0x00124b00226a1d54_temperature")))/3)|round(2) }}'
+      livingroom_valve_position_averaged:
+        unique_id: c918669b_bb8a_41e4_826b_2d05487b5cd4
+        friendly_name: "Valve positions - Livingroom (averaged)"
+        unit_of_measurement: "%"
+        value_template: '{{ ((float(state_attr("climate.0x60a423fffeab43cc_climate", "position"))+float(state_attr("climate.0x60a423fffea0fd1c_climate", "position")))/2)|round(2) }}'
+      0x60a423fffeab43cc_climate_current_temperature:
+        unique_id: 34d70813_11c2_429a_9cda_1b62a54d3d70
+        friendly_name: "Left Radiator Temperature - Livingroom"
+        unit_of_measurement: "°C"
+        value_template: '{{ float(state_attr("climate.0x60a423fffeab43cc_climate", "current_temperature")) }}'
+      0x60a423fffeab43cc_battery_status:
+        unique_id: 2b5ab766_d502_420c_821b_f19174c7eca0
+        friendly_name: "Left Radiator Battery - Livingroom"
+        unit_of_measurement: "%"
+        value_template: '{% if is_state_attr("climate.0x60a423fffeab43cc_climate", "battery_low", false) %} normal {% else %} low {% endif %}'
+      0x60a423fffea0fd1c_climate_current_temperature:
+        unique_id: 54064069_3cb8_41b4_a7e1_1e02232f5cdc
+        friendly_name: "Right Radiator Temperature - Livingroom"
+        unit_of_measurement: "°C"
+        value_template: '{{ float(state_attr("climate.0x60a423fffea0fd1c_climate", "current_temperature")) }}'
+      0x60a423fffea0fd1c_battery_status:
+        unique_id: 5d147822_6e87_436d_a386_b84070a8f8b7
+        friendly_name: "Right Radiator Battery - Livingroom"
+        unit_of_measurement: "%"
+        value_template: '{% if is_state_attr("climate.0x60a423fffea0fd1c_climate", "battery_low", false) %} normal {% else %} low {% endif %}'
+      0x60a423fffeab48cc_climate_current_temperature:
+        unique_id: e1ac3341_4a3f_4b49_8fef_e990e0445ce0
+        friendly_name: "Radiator Temperature - Bedroom"
+        unit_of_measurement: "°C"
+        value_template: '{{ float(state_attr("climate.0x60a423fffeab48cc_climate", "current_temperature")) }}'
+      0x60a423fffeab48cc_battery_status:
+        unique_id: 0934fe41_8bca_4f68_9a85_d3049a89ea0b
+        friendly_name: "Radiator Battery - Bedroom"
+        unit_of_measurement: "%"
+        value_template: '{% if is_state_attr("climate.0x60a423fffeab48cc_climate", "battery_low", false) %} normal {% else %} low {% endif %}'
+      xiaomi_miio_device_temperature:
+        unique_id: 21c730bc_3fa1_43f9_b53b_b2930128bde1
+        friendly_name: "Air purifier Temperature - Bedroom"
+        unit_of_measurement: "°C"
+        value_template: '{{ float(state_attr("fan.xiaomi_miio_device", "temperature")) }}'
+      xiaomi_miio_device_humidity:
+        unique_id: 614ba805_7881_41a2_9fe0_a45956e8299c
+        friendly_name: "Air purifier Humidity - Bedroom"
+        unit_of_measurement: "%"
+        value_template: '{{ float(state_attr("fan.xiaomi_miio_device", "humidity")) }}'
+      xiaomi_miio_device_aqi:
+        unique_id: 7489dc82_f146_46fa_8261_8dfaba76f9b6
+        friendly_name: "Air purifier Air quality - Bedroom"
+        unit_of_measurement: "AQI"
+        value_template: '{{ state_attr("fan.xiaomi_miio_device", "aqi") }}'
+  - platform: yahoofinance
+    scan_interval:
+      minutes: 10
+    symbols:
+      - ^GSPC
+      - ^DJI
+      - ^IXIC
+      - ^RUT
+      - ^GDAXI
+      - IWDA.AS
+      - EIMI.L
+      - BTC-USD
+
+light:
+  - platform: limitlessled
+    bridges:
+      - host: !secret limitless_bridge_ip
+        groups:
+          - number: 1
+            type: bridge-led
+            name: milight_bridge
+          - number: 1
+            name: milight_DiningTable
+            type: rgbw
+          - number: 2
+            name: milight_BedSide
+            type: rgbw
+
+switch:
+  - platform: template
+    switches:
+      forked_daapd_bathroom_chromecast:
+        friendly_name: "Forked_daapd Bathroom(Chromecast)"
+        unique_id: 094968c6_485b_4729_9038_83a2d1212e2c
+        availability_template: "{{ not (is_state('media_player.bathroom_speaker', 'unavailable')) }}"
+        value_template: "{{ is_state('media_player.forked_daapd_output_bathroom_speaker_2', 'on') }}"
+        icon_template: mdi:shower
+        turn_on:
+          service: media_player.turn_on
+          data:
+            entity_id: media_player.forked_daapd_output_bathroom_speaker_2
+        turn_off:
+          service: media_player.turn_off
+          data:
+            entity_id: media_player.forked_daapd_output_bathroom_speaker_2
+      forked_daapd_bathroom_chromecast_mute:
+        friendly_name: "Forked_daapd Bathroom(Chromecast) - Mute"
+        unique_id: 67e842f8_4a3d_4b77_bc57_1ec9590b2842
+        availability_template: "{{ not (is_state('media_player.bathroom_speaker', 'unavailable')) }}"
+        value_template: "{{ is_state_attr('media_player.forked_daapd_output_bathroom_speaker_2', 'is_volume_muted', true) or is_state_attr('media_player.bathroom_speaker', 'is_volume_muted', true) }}"
+        icon_template: "{% if is_state_attr('media_player.forked_daapd_output_bathroom_speaker_2', 'is_volume_muted', true) or is_state_attr('media_player.bathroom_speaker', 'is_volume_muted', true) %}mdi:volume-off{% else %}mdi:volume-high{% endif %}"
+        turn_on:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_bathroom_speaker_2
+              is_volume_muted: true
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.bathroom_speaker
+              is_volume_muted: true
+        turn_off:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_bathroom_speaker_2
+              is_volume_muted: false
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.bathroom_speaker
+              is_volume_muted: false
+      forked_daapd_bedroom_chromecast:
+        friendly_name: "Forked_daapd Bedroom(Chromecast)"
+        unique_id: f220dc03_d9cc_40db_9b78_d15b956b19c6
+        availability_template: "{{ not (is_state('media_player.bedroom', 'unavailable')) }}"
+        value_template: "{{ is_state('media_player.forked_daapd_output_bedroom_speaker_2', 'on') }}"
+        icon_template: mdi:bed-king
+        turn_on:
+          service: media_player.turn_on
+          data:
+            entity_id: media_player.forked_daapd_output_bedroom_speaker_2
+        turn_off:
+          service: media_player.turn_off
+          data:
+            entity_id: media_player.forked_daapd_output_bedroom_speaker_2
+      forked_daapd_bedroom_chromecast_mute:
+        friendly_name: "Forked_daapd Bedroom(Chromecast) - Mute"
+        unique_id: e26d83a1_a110_4bbd_afd1_adc7b92f3d0f
+        availability_template: "{{ not (is_state('media_player.bedroom', 'unavailable')) }}"
+        value_template: "{{ is_state_attr('media_player.forked_daapd_output_bedroom_speaker_2', 'is_volume_muted', true) or is_state_attr('media_player.bedroom', 'is_volume_muted', true) }}"
+        icon_template: "{% if is_state_attr('media_player.forked_daapd_output_bedroom_speaker_2', 'is_volume_muted', true) or is_state_attr('media_player.bedroom', 'is_volume_muted', true) %}mdi:volume-off{% else %}mdi:volume-high{% endif %}"
+        turn_on:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_bedroom_speaker_2
+              is_volume_muted: true
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.bedroom
+              is_volume_muted: true
+        turn_off:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_bedroom_speaker_2
+              is_volume_muted: false
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.bedroom
+              is_volume_muted: false
+      forked_daapd_hallway_chromecast:
+        friendly_name: "Forked_daapd Hallway(Chromecast)"
+        unique_id: 30989bff_429b_45cf_a512_f2c5e5cbaeaf
+        #availability_template: "{{ not (is_state('media_player.hallway_speaker', 'unavailable')) }}"
+        value_template: "{{ is_state('media_player.forked_daapd_output_hallway_speaker', 'on') and not (is_state('media_player.hallway_speaker', 'unavailable')) }}"
+        icon_template: mdi:hanger
+        turn_on:
+          - service: media_player.turn_on
+            data:
+              entity_id: media_player.forked_daapd_output_hallway_speaker
+          - service: switch.turn_on
+            entity_id:
+              - switch.0x842e14fffe1264cc
+        turn_off:
+          service: media_player.turn_off
+          data:
+            entity_id: media_player.forked_daapd_output_hallway_speaker
+      forked_daapd_hallway_chromecast_mute:
+        friendly_name: "Forked_daapd Hallway(Chromecast) - Mute"
+        unique_id: 30c68ee9_4ede_4aed_9498_6e17dd1817d0
+        availability_template: "{{ not (is_state('media_player.hallway_speaker', 'unavailable')) }}"
+        value_template: "{{ is_state_attr('media_player.forked_daapd_output_hallway_speaker', 'is_volume_muted', true) or is_state_attr('media_player.hallway_speaker', 'is_volume_muted', true) }}"
+        icon_template: "{% if is_state_attr('media_player.forked_daapd_output_hallway_speaker', 'is_volume_muted', true) or is_state_attr('media_player.hallway_speaker', 'is_volume_muted', true) %}mdi:volume-off{% else %}mdi:volume-high{% endif %}"
+        turn_on:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_hallway_speaker
+              is_volume_muted: true
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.hallway_speaker
+              is_volume_muted: true
+        turn_off:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_hallway_speaker
+              is_volume_muted: false
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.hallway_speaker
+              is_volume_muted: false
+      forked_daapd_livingroom_chromecast:
+        friendly_name: "Forked_daapd Livingroom(Chromecast)"
+        unique_id: b9cffae5_fc50_4388_a612_51e27285bee1
+        availability_template: "{{ not (is_state('media_player.livingroom_speaker', 'unavailable')) }}"
+        value_template: "{{ is_state('media_player.forked_daapd_output_living_room_speaker_2', 'on') and is_state('switch.listening_music_livingroom', 'on') }}"
+        icon_template: mdi:sofa
+        turn_on:
+          - service: media_player.turn_on
+            data:
+              entity_id: media_player.forked_daapd_output_living_room_speaker_2
+          - service: switch.turn_on
+            entity_id:
+              - switch.listening_music_livingroom
+        turn_off:
+          - service: media_player.turn_off
+            data:
+              entity_id: media_player.forked_daapd_output_living_room_speaker_2
+          - service: switch.turn_off
+            entity_id:
+              - switch.listening_music_livingroom
+      forked_daapd_livingroom_chromecast_mute:
+        friendly_name: "Forked_daapd Livingroom(Chromecast) - Mute"
+        unique_id: 67edb026_4a01_4853_8ae1_fdf52260d5ee
+        availability_template: "{{ not (is_state('media_player.livingroom_speaker', 'unavailable')) }}"
+        value_template: "{{ is_state_attr('media_player.forked_daapd_output_living_room_speaker_2', 'is_volume_muted', true) or is_state_attr('media_player.livingroom_speaker', 'is_volume_muted', true) }}"
+        icon_template: "{% if is_state_attr('media_player.forked_daapd_output_living_room_speaker_2', 'is_volume_muted', true) or is_state_attr('media_player.livingroom_speaker', 'is_volume_muted', true) %}mdi:volume-off{% else %}mdi:volume-high{% endif %}"
+        turn_on:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_living_room_speaker_2
+              is_volume_muted: true
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.livingroom_speaker
+              is_volume_muted: true
+        turn_off:
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.forked_daapd_output_living_room_speaker_2
+              is_volume_muted: false
+          - service: media_player.volume_mute
+            data:
+              entity_id: media_player.livingroom_speaker
+              is_volume_muted: false
+      sockets_media_livingroom:
+        friendly_name: "Media Sockets Livingroom"
+        unique_id: 9aa2ef34-7900-420f-8477-acb68eb884cd
+        availability_template: "{{ not (is_state('switch.beamer_livingroom', 'unavailable') or is_state('switch.hifi_livingroom', 'unavailable')) }}"
+        value_template: "{{ is_state('switch.0x842e14fffe0e3b43', 'on') or is_state('switch.0x842e14fffe366832', 'on') }}"
+        icon_template: "{% if is_state('switch.0x842e14fffe0e3b43', 'on') or is_state('switch.0x842e14fffe366832', 'on') %}mdi:power-plug{% else %}mdi:power-plug-off{% endif %}"
+        turn_on:
+          service: switch.turn_on
+          entity_id:
+            - switch.0x842e14fffe0e3b43
+            - switch.0x842e14fffe366832
+        turn_off:
+          service: switch.turn_off
+          entity_id:
+            - switch.0x842e14fffe0e3b43
+            - switch.0x842e14fffe366832
+      hifi_livingroom:
+        friendly_name: "HiFi Livingroom"
+        unique_id: 6fdebd00_722f_46e9_b2d6_be9740adbdb4
+        availability_template: "{{ not (is_state('switch.0x842e14fffe0e3b43', 'unavailable')) }}"
+        value_template: "{{ is_state('switch.0x842e14fffe0e3b43', 'on') and state_attr('switch.0x842e14fffe0e3b43', 'power') > 10 }}"
+        turn_on:
+          - condition: template
+            value_template: "{{ state_attr('switch.0x842e14fffe0e3b43', 'power') < 10 }}"
+          - service: switch.turn_on
+            data:
+              entity_id: switch.0x842e14fffe0e3b43
+          - delay: "00:00:05"
+          - service: script.hifi_panasonic_power
+          - delay: "00:00:05"
+          - service: automation.trigger
+            data:
+              entity_id: automation.hifi_input_changed
+              skip_condition: true
+        turn_off:
+          - service: switch.turn_off
+            data:
+              entity_id: switch.0x842e14fffe0e3b43
+      beamer_livingroom:
+        friendly_name: "Beamer Livingroom"
+        unique_id: 292daf84_8e33_4bb2_b26f_04088940b658
+        availability_template: "{{ not (is_state('switch.0x842e14fffe366832', 'unavailable')) }}"
+        value_template: "{{ is_state('switch.0x842e14fffe366832', 'on') and state_attr('switch.0x842e14fffe366832', 'power') > 10 }}"
+        turn_on:
+          - condition: template
+            value_template: "{{ state_attr('switch.0x842e14fffe366832', 'power') < 10 }}"
+          - service: switch.turn_on
+            data:
+              entity_id: switch.0x842e14fffe366832
+          - delay: "00:00:15"
+          - service: script.beamer_elephas_power
+          - delay: "00:00:15"
+          - condition: template
+            value_template: "{{ state_attr('switch.0x842e14fffe366832', 'power') < 10 }}"
+          - service: script.beamer_elephas_power
+        turn_off:
+          - service: switch.turn_off
+            data:
+              entity_id: switch.0x842e14fffe366832
+      watching_tv_livingroom:
+        friendly_name: "Watch TV (Livingroom)"
+        unique_id: 4dcfec1b_bc67_4dd9_9e42_041ba7e9a840
+        availability_template: "{{ not (is_state('switch.beamer_livingroom', 'unavailable') or is_state('switch.hifi_livingroom', 'unavailable')) }}"
+        value_template: "{{ is_state('switch.beamer_livingroom', 'on') and is_state('switch.hifi_livingroom', 'on') and is_state('input_select.hifi_input_channel', 'TV') }}"
+        turn_on:
+          - service: input_select.select_option
+            data:
+              entity_id: input_select.hifi_input_channel
+              option: TV
+          - service: switch.turn_on
+            data:
+              entity_id: switch.beamer_livingroom
+          - delay: "00:00:02"
+          - service: switch.turn_on
+            data:
+              entity_id: switch.hifi_livingroom
+          - delay: "00:00:05"
+          - service: input_select.select_option
+            data:
+              entity_id: input_select.hifi_input_channel
+              option: TV
+        turn_off:
+          - service: switch.turn_off
+            data:
+              entity_id: switch.beamer_livingroom
+          - service: switch.turn_off
+            data:
+              entity_id: switch.hifi_livingroom
+        icon_template: "{% if is_state('switch.watching_tv_livingroom', 'on') %}mdi:television{% else %}mdi:television-off{% endif %}"
+      listening_music_livingroom:
+        friendly_name: "Listen to Music (Livingroom)"
+        unique_id: 9e30ee6c_0ea5_467b_af86_e8eabd1c14e0
+        availability_template: "{{ not (is_state('switch.hifi_livingroom', 'unavailable')) }}"
+        value_template: "{{ is_state('switch.hifi_livingroom', 'on') and is_state('input_select.hifi_input_channel', 'AUX') }}"
+        turn_on:
+          - service: input_select.select_option
+            data:
+              entity_id: input_select.hifi_input_channel
+              option: AUX
+          - service: switch.turn_on
+            data:
+              entity_id: switch.hifi_livingroom
+          - service: switch.turn_off
+            data:
+              entity_id: switch.beamer_livingroom
+          - delay: "00:00:05"
+          - service: input_select.select_option
+            data:
+              entity_id: input_select.hifi_input_channel
+              option: AUX
+        turn_off:
+          - service: switch.turn_off
+            data:
+              entity_id: switch.hifi_livingroom
+        icon_template: "{% if is_state('switch.listening_music_livingroom', 'on') %}mdi:speaker{% else %}mdi:speaker-off{% endif %}"
+
+device_tracker:
+  - platform: fritz
+    host: !secret fritz_ip
+    username: !secret fritz_username
+    password: !secret fritz_password
+    interval_seconds: 10
+    new_device_defaults:
+      track_new_devices: true
+
+o365:
+  client_secret: !secret o365_client_secret
+  client_id: !secret o365_client_id
+  alt_auth_flow: true
+  email_sensor:
+    - name: inbox
+      max_items: 2
+      is_unread: True
+
+fan:
+  - platform: xiaomi_miio
+    host: !secret xiaomi_airpurifier_ip
+    token: !secret xiaomi_airpurifier_token
+
+################################################################################
+################################ -INCLUDES- ####################################
+################################################################################
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml

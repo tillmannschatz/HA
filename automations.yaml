@@ -1,0 +1,513 @@
+- id: '1607259412724'
+  alias: 'socket_remote: Desk on'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: cc104af349e7a174f6a550d493e97440
+    type: action
+    subtype: 'on'
+    discovery_id: 0xbc33acfffe9b52d4 action_on
+  condition: []
+  action:
+  - domain: switch
+    entity_id: switch.0x842e14fffe1265c1_switch
+    device_id: 9dadab5959e7ac804dd4484d90cf4a4d
+    type: turn_on
+  mode: single
+- id: '1607259560056'
+  alias: 'socket_remote: Desk off'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: cc104af349e7a174f6a550d493e97440
+    type: action
+    subtype: 'off'
+    discovery_id: 0xbc33acfffe9b52d4 action_off
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 9dadab5959e7ac804dd4484d90cf4a4d
+    entity_id: switch.0x842e14fffe1265c1_switch
+    domain: switch
+  mode: single
+- id: '1607277390378'
+  alias: 'hifi_remote: Watch TV'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63789194c5accc8cc1257b606b9f344b
+    type: action
+    subtype: brightness_up_click
+    discovery_id: 0x588e81fffe1fca67 action_brightness_up_click
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.watching_tv_livingroom
+  mode: single
+- id: '1607277627331'
+  alias: 'hifi_remote: Listen to Music'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63789194c5accc8cc1257b606b9f344b
+    type: action
+    subtype: brightness_down_click
+    discovery_id: 0x588e81fffe1fca67 action_brightness_down_click
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.listening_music_livingroom
+  mode: single
+- id: '1607277737081'
+  alias: 'hifi_remote: Volume Up'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63789194c5accc8cc1257b606b9f344b
+    type: action
+    subtype: arrow_right_click
+    discovery_id: 0x588e81fffe1fca67 action_arrow_right_click
+  condition: []
+  action:
+  - service: script.hifi_panasonic_volume_up
+    data: {}
+  mode: queued
+  max: 5
+- id: '1607277810316'
+  alias: 'hifi_remote: Volume Down'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63789194c5accc8cc1257b606b9f344b
+    type: action
+    subtype: arrow_left_click
+    discovery_id: 0x588e81fffe1fca67 action_arrow_left_click
+  condition: []
+  action:
+  - service: script.hifi_panasonic_volume_down
+    data: {}
+  mode: queued
+  max: 5
+- id: '1608217067765'
+  alias: 'Alarm: Wake-up light alarm with sunrise effect'
+  description: ''
+  use_blueprint:
+    path: Sbyx/wake-up-light-alarm-with-sunrise-effect.yaml
+    input:
+      max_brightness: '100'
+      light_entity: light.0x588e81fffe63e620
+      timestamp_sensor: sensor.redmi_note_9_pro_next_alarm
+      sunrise_duration: '15'
+- id: '1608368895787'
+  alias: 'radiator: Open Window (Bedroom)'
+  description: Automate bedroom radiator for window open/closing
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.0x00124b0022361c84_contact
+    to: 'on'
+    from: 'off'
+    for: 00:00:10
+  condition: []
+  action:
+  - device_id: 14f3fb78fdfbe0424ff4c6b29d6c25b5
+    domain: climate
+    entity_id: climate.0x60a423fffeab48cc_climate
+    type: set_preset_mode
+    preset_mode: manual
+  - service: climate.set_temperature
+    data:
+      temperature: 5
+    entity_id: climate.0x60a423fffeab48cc_climate
+  - service: input_number.set_value
+    data:
+      value: '{{ state_attr("climate.0x60a423fffeab48cc_climate", "temperature") }}'
+    entity_id: input_number.bedroom_radiator_last_set_temperature
+  - wait_for_trigger:
+    - platform: state
+      entity_id: binary_sensor.0x00124b0022361c84_contact
+      from: 'on'
+      to: 'off'
+      for: 00:00:10
+    continue_on_timeout: false
+    timeout: 00:30:00
+  - service: climate.set_temperature
+    data:
+      temperature: '{{ states("input_number.bedroom_radiator_last_set_temperature")
+        }}'
+    entity_id: climate.0x60a423fffeab48cc_climate
+  mode: restart
+- id: '1608725190571'
+  alias: 'light_remote: Bedside Lamp(s)'
+  description: ''
+  use_blueprint:
+    path: ageurtse/zigbee2mqtt-tradfri-on-off-switch.yaml
+    input:
+      switch: sensor.0xbc33acfffebf5bba_action
+      light_1:
+        device_id: 4ba73bde0889bf9353d66b2a5770699a
+      light_2:
+        device_id:
+        - 4ba73bde0889bf9353d66b2a5770699a
+        - 8b99b9bdc141516830f026e975a4c20e
+- id: '1608998799591'
+  alias: 'radiator: Input Number => Set Temperature (Livingroom)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_number.radiator_livingroom_target_temperature
+  condition: []
+  action:
+  - service: climate.set_temperature
+    data:
+      temperature: '{{ states("input_number.radiator_livingroom_target_temperature")
+        }}'
+    entity_id: climate.0x60a423fffeab43cc_climate
+  - service: climate.set_temperature
+    data:
+      temperature: '{{ states("input_number.radiator_livingroom_target_temperature")
+        }}'
+    entity_id: climate.0x60a423fffea0fd1c_climate
+  mode: restart
+- id: '1609174271165'
+  alias: 'hifi: input changed'
+  description: 'Input: Input Select
+
+    Output: Script'
+  trigger:
+  - platform: state
+    entity_id: input_select.hifi_input_channel
+  condition: []
+  action:
+  - service: '{% if is_state(''input_select.hifi_input_channel'', ''TV'') %}script.hifi_panasonic_tv{%
+      else %}script.hifi_panasonic_aux{% endif %}'
+    data: {}
+  mode: single
+- id: '1609179055286'
+  alias: 'hifi_remote: Media off'
+  description: Switch Hifi and Beamer off
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 63789194c5accc8cc1257b606b9f344b
+    type: action
+    subtype: toggle
+    discovery_id: 0x588e81fffe1fca67 action_toggle
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.hifi_livingroom
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.beamer_livingroom
+  mode: single
+- id: '1609545417662'
+  alias: 'work: switch all others off (AIR101)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.work_logger_air101
+    to: 'on'
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - input_boolean.work_logger_hom04
+    - input_boolean.work_logger_mews
+    - input_boolean.work_logger_pro03
+  mode: single
+- id: '1609545461486'
+  alias: 'work: switch all others off (HOM04)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.work_logger_hom04
+    to: 'on'
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - input_boolean.work_logger_air101
+    - input_boolean.work_logger_mews
+    - input_boolean.work_logger_pro03
+  mode: single
+- id: '1609545509476'
+  alias: 'work: switch all others off (MEWS)'
+  description: ''
+  trigger:
+  - platform: state
+    to: 'on'
+    entity_id: input_boolean.work_logger_mews
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - input_boolean.work_logger_air101
+    - input_boolean.work_logger_hom04
+    - input_boolean.work_logger_pro03
+  mode: single
+- id: '1609545541017'
+  alias: 'work: switch all others off (PRO03)'
+  description: ''
+  trigger:
+  - platform: state
+    to: 'on'
+    entity_id: input_boolean.work_logger_pro03
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - input_boolean.work_logger_air101
+    - input_boolean.work_logger_hom04
+    - input_boolean.work_logger_mews
+  mode: single
+- id: '1609545922985'
+  alias: 'work: Off work (Status)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.activity_status_tillmann
+    from: work
+  condition: []
+  action:
+  - service: homeassistant.turn_off
+    entity_id:
+    - input_boolean.work_logger_air101
+    - input_boolean.work_logger_hom04
+    - input_boolean.work_logger_mews
+    - input_boolean.work_logger_pro03
+  mode: single
+- id: '1609546226571'
+  alias: 'work: On work (Items)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.work_logger_air101
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.work_logger_hom04
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.work_logger_mews
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.work_logger_pro03
+    to: 'on'
+  condition: []
+  action:
+  - service: input_select.select_option
+    entity_id: input_select.activity_status_tillmann
+    data:
+      option: work
+  mode: single
+- id: '1609546688313'
+  alias: 'work: Off work (Items)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.work_logger_air101
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.work_logger_hom04
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.work_logger_mews
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.work_logger_pro03
+    to: 'off'
+  condition:
+  - condition: state
+    entity_id: input_boolean.work_logger_air101
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.work_logger_hom04
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.work_logger_mews
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.work_logger_pro03
+    state: 'off'
+  - condition: state
+    entity_id: input_select.activity_status_tillmann
+    state: work
+  action:
+  - service: input_select.select_option
+    entity_id: input_select.activity_status_tillmann
+    data:
+      option: personal
+  mode: single
+- id: '1609547723438'
+  alias: 'work: On work (Status)'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.activity_status_tillmann
+    to: work
+  condition:
+  - condition: state
+    entity_id: input_boolean.work_logger_air101
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.work_logger_hom04
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.work_logger_mews
+    state: 'off'
+  - condition: state
+    entity_id: input_boolean.work_logger_pro03
+    state: 'off'
+  action:
+  - service: script.notification_work_selection_actionable
+    data: {}
+  mode: single
+- id: '1609549993803'
+  alias: 'work: activate project (AIR101) from actionable notification'
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: AIR101
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    entity_id: input_boolean.work_logger_air101
+  mode: single
+- id: '1609550311441'
+  alias: 'work: activate project (HOM04) from actionable notification'
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: HOM04
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    entity_id: input_boolean.work_logger_hom04
+  mode: single
+- id: '1609550336787'
+  alias: 'work: activate project (PRO03) from actionable notification'
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: PRO03
+  condition: []
+  action:
+  - service: input_boolean.turn_on
+    data: {}
+    entity_id: input_boolean.work_logger_pro03
+  mode: single
+- id: '1609550484297'
+  alias: 'work: work status button clicked'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 52d6b09f70cf1de5cc491347324630ad
+    type: action
+    subtype: single
+    discovery_id: 0x00124b00222874dc action_single
+  condition: []
+  action:
+  - service: script.notification_work_selection_actionable
+    data: {}
+  mode: single
+- id: '1609550902318'
+  alias: 'work: work status button double-clicked'
+  description: ''
+  trigger:
+  - platform: device
+    domain: mqtt
+    device_id: 52d6b09f70cf1de5cc491347324630ad
+    type: action
+    subtype: double
+    discovery_id: 0x00124b00222874dc action_double
+  condition: []
+  action:
+  - service: input_select.select_option
+    data:
+      option: personal
+    entity_id: input_select.activity_status_tillmann
+  mode: single
+- id: '1609605580433'
+  alias: 'activity: Update Activity Timestamps'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_select.activity_status_tillmann
+  - platform: state
+    entity_id: input_boolean.work_logger_air101
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.work_logger_hom04
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.work_logger_mews
+    to: 'on'
+  - platform: state
+    entity_id: input_boolean.work_logger_pro03
+    to: 'on'
+  condition: []
+  action:
+  - service: input_datetime.set_datetime
+    data:
+      entity_id: input_datetime.activity_last_activity_started
+      timestamp: '{{ states(''input_datetime.activity_last_activity_ended'')|as_timestamp()
+        }}'
+  - service: input_datetime.set_datetime
+    data:
+      entity_id: input_datetime.activity_last_activity_ended
+      timestamp: '{{ now().timestamp() }}'
+  mode: single
+- id: '1609616520285'
+  alias: 'work: Create Calendar entry'
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: input_boolean.work_logger_air101
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.work_logger_hom04
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.work_logger_mews
+    to: 'off'
+  - platform: state
+    entity_id: input_boolean.work_logger_pro03
+    to: 'off'
+  condition: []
+  action:
+  - delay: 00:00:01
+  - condition: template
+    value_template: '{{ (states(''input_datetime.activity_last_activity_ended'')|as_timestamp()
+      - states(''input_datetime.activity_last_activity_started'')|as_timestamp())
+      > 300 }}'
+  - delay: 00:01:10
+  - service: o365.create_calendar_event
+    data:
+      calendar_id: AAMkADEwNzgwMjRmLWYxNzMtNGRlNS1iODQxLWY2Y2ZlMWEwN2EzMgBGAAAAAACfSFoWJ_DBQosu6qcDxQT1BwCwuwCjfkCHQbKmWv2bLqw-AAAAAAEGAACwuwCjfkCHQbKmWv2bLqw-AAALpp7qAAA=
+      subject: '[{{ trigger.from_state.attributes.friendly_name.split('': '')[-1]
+        }}] HAENTRY'
+      start: '{{ states(''input_datetime.activity_last_activity_started'') }}'
+      end: '{{ states(''input_datetime.activity_last_activity_ended'') }}'
+      body: 'Automated work logging entry from HomeAssistant for Project: {{ trigger.from_state.attributes.friendly_name
+        }}'
+      sensitivity: Normal
+      show_as: Busy
+  mode: single
+  max: 5

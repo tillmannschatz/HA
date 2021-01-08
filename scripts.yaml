@@ -1,0 +1,502 @@
+send_rf_433_button_0:
+  alias: Send RF 433 Button 0
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.sonoff_rf
+      command: 0
+  mode: single
+  icon: mdi:remote
+send_rf_433_button_1:
+  alias: Send RF 433 Button 1
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.sonoff_rf
+      command: 1
+  mode: single
+  icon: mdi:remote
+send_rf_433_button_2:
+  alias: Send RF 433 Button 2
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.sonoff_rf
+      command: 2
+  mode: single
+  icon: mdi:remote
+send_rf_433_button_3:
+  alias: Send RF 433 Button 3
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.sonoff_rf
+      command: 3
+  mode: single
+  icon: mdi:remote
+send_rf_433_button_4:
+  alias: Send RF 433 Button 4
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.sonoff_rf
+      command: 4
+  mode: single
+  icon: mdi:remote
+send_rf_433_button_5:
+  alias: Send RF 433 Button 5
+  sequence:
+  - service: remote.send_command
+    data:
+      entity_id: remote.sonoff_rf
+      command: 5
+  mode: single
+  icon: mdi:remote
+reconnect_fritzbox:
+  alias: Fritz!Box Reconnect
+  sequence:
+  - service: fritz_tools.reconnect
+    data:
+      host: 192.168.178.1
+  mode: single
+  icon: mdi:refresh
+hifi_panasonic_mute:
+  alias: HiFi_Panasonic_mute
+  sequence:
+  - service: remote.send_command
+    data:
+      device: HiFi_Panasonic
+      command: mute
+    entity_id: remote.ir_remote_remote
+  mode: single
+hifi_panasonic_power:
+  alias: HiFi_Panasonic_Power
+  sequence:
+  - service: remote.send_command
+    data:
+      device: HiFi_Panasonic
+      command: power
+    entity_id: remote.ir_remote_remote
+  mode: single
+hifi_panasonic_tv:
+  alias: HiFi_Panasonic_TV
+  sequence:
+  - service: remote.send_command
+    data:
+      device: HiFi_Panasonic
+      command: tv
+    entity_id: remote.ir_remote_remote
+  mode: single
+hifi_panasonic_aux:
+  alias: HiFi_Panasonic_AUX
+  sequence:
+  - service: remote.send_command
+    data:
+      device: HiFi_Panasonic
+      command: aux
+    entity_id: remote.ir_remote_remote
+  mode: single
+hifi_panasonic_volume_up:
+  alias: HiFi_Panasonic_Volume_Up
+  sequence:
+  - service: remote.send_command
+    data:
+      device: HiFi_Panasonic
+      command: volume_up
+    entity_id: remote.ir_remote_remote
+  mode: single
+hifi_panasonic_volume_down:
+  alias: HiFi_Panasonic_Volume_Down
+  sequence:
+  - service: remote.send_command
+    data:
+      device: HiFi_Panasonic
+      command: volume_down
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_power:
+  alias: Beamer_Elephas_Power
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: power
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_mute:
+  alias: Beamer_Elephas_Mute
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: mute
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_ok:
+  alias: Beamer_Elephas_OK
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: ok
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_up:
+  alias: Beamer_Elephas_Up
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: up
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_down:
+  alias: Beamer_Elephas_Down
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: down
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_left:
+  alias: Beamer_Elephas_Left
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: left
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_right:
+  alias: Beamer_Elephas_Right
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: right
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_back:
+  alias: Beamer_Elephas_Back
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: back
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_menu:
+  alias: Beamer_Elephas_Menu
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: menu
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_volume_up:
+  alias: Beamer_Elephas_Volume_Up
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: plus
+    entity_id: remote.ir_remote_remote
+  mode: single
+beamer_elephas_volume_down:
+  alias: Beamer_Elephas_Volume_Down
+  sequence:
+  - service: remote.send_command
+    data:
+      device: Beamer_Elephas
+      command: minus
+    entity_id: remote.ir_remote_remote
+  mode: single
+tv_on_off:
+  alias: TV_On_Off
+  sequence:
+  - type: toggle
+    device_id: 41ef01bafcba88d32508d85aa37090d2
+    entity_id: switch.0x842e14fffe366832
+    domain: switch
+  - type: toggle
+    device_id: 5892d5b81bb04b3737f2a69c62a2e24f
+    entity_id: switch.0x842e14fffe0e3b43
+    domain: switch
+  - delay: '5'
+  - service: script.beamer_elephas_power
+    entity_id: remote.ir_remote_remote
+    data: {}
+  - delay: '2'
+  - service: script.hifi_panasonic_power
+    data: {}
+  - delay: '5'
+  - service: script.hifi_panasonic_tv
+    data: {}
+  mode: restart
+cast_url_to_bedroom_mediaplayer:
+  alias: Cast URL to Bedroom Mediaplayer
+  sequence:
+  - service: media_extractor.play_media
+    data:
+      media_content_id: https://www.youtube.com/watch?v=GW9BS3N40Yc
+      media_content_type: audio/mp4
+    entity_id: media_player.kitchen
+  mode: restart
+announce_name_and_cast_radio_station_to_bedroom_mediaplayer:
+  alias: Announce Name and Cast Radio Station to Bedroom Mediaplayer
+  sequence:
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.kitchen
+      message: Lets ROCK! Starting Radio BoB!
+  - wait_template: '{{is_state(''media_player.kitchen'', ''playing'')}}'
+  - wait_template: '{{is_state(''media_player.kitchen'', ''idle'')}}'
+  - service: media_extractor.play_media
+    entity_id: media_player.kitchen
+    data:
+      media_content_id: http://bob.hoerradar.de/radiobob-live-mp3-hq
+      media_content_type: audio/mp4
+  mode: restart
+test_notification_android:
+  alias: Test notification Android
+  sequence:
+  - service: notify.mobile_app_redmi_note_9_pro
+    data:
+      title: Sample title of notification
+      message: Notification text
+      data:
+        group: Test
+        clickAction: https://google.com
+        actions:
+        - action: alarm
+          title: Title
+  mode: single
+fritzbox_reboot:
+  alias: Fritz!Box Reboot
+  sequence:
+  - service: fritzbox_tools.reboot
+    data:
+      host: 192.168.178.1
+  mode: single
+  icon: mdi:refresh
+spotcast_livingroom_this_is_public_enemy:
+  alias: Spotcast Livingroom - This Is Public Enemy
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:37i9dQZF1DX3yvAYDslnv8
+  mode: restart
+spotcast_livingroom_the_piano_bar:
+  alias: Spotcast Livingroom - The Piano Bar
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:37i9dQZF1DWVvXA824aCbn
+  mode: restart
+spotcast_livingroom_french_jazz_cafe:
+  alias: Spotcast Livingroom - French Jazz Café
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:6FJQEBg5EkaTitPWcSbBI7
+  mode: restart
+spotcast_livingroom_missing_radio:
+  alias: Spotcast Livingroom - Missing Radio
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:37i9dQZF1E8ALrpbJ31flN
+  mode: restart
+spotcast_livingroom_48th_st_collective_radio:
+  alias: Spotcast Livingroom - 48th St. Collective Radio
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:37i9dQZF1E4ynIGBxJgPcw
+  mode: restart
+spotcast_livingroom_jazz_blues_soul_funk_swing:
+  alias: Spotcast Livingroom - Jazz Blues Soul Funk Swing
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:5naUmfPUCclfgwzmUrS4NI
+  mode: restart
+spotcast_livingroom_discover_weekly:
+  alias: Spotcast Livingroom - Discover Weekly
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:37i9dQZEVXcUBtVPipKaoH
+  mode: restart
+spotcast_livingroom_k_pop:
+  alias: Spotcast Livingroom - K-Pop
+  sequence:
+  - service: spotcast.start
+    data:
+      entity_id: media_player.livingroom_speaker
+      uri: spotify:playlist:1JNz1iWSWNVW8czfHOp9EN
+  mode: restart
+firetv_remote_home:
+  alias: FireTV_Remote_Home
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 786979 && sendevent /dev/input/event4
+        1 172 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 786979 && sendevent /dev/input/event4 1 172 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_left:
+  alias: FireTV_Remote_Left
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 458832 && sendevent /dev/input/event4
+        1 105 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 458832 && sendevent /dev/input/event4 1 105 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_right:
+  alias: FireTV_Remote_Right
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 458831 && sendevent /dev/input/event4
+        1 106 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 458831 && sendevent /dev/input/event4 1 106 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_up:
+  alias: FireTV_Remote_Up
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 458834 && sendevent /dev/input/event4
+        1 103 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 458834 && sendevent /dev/input/event4 1 103 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_down:
+  alias: FireTV_Remote_Down
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 458833 && sendevent /dev/input/event4
+        1 108 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 458833 && sendevent /dev/input/event4 1 108 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_ok:
+  alias: FireTV_Remote_Ok
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 458840 && sendevent /dev/input/event4
+        1 96 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 458840 && sendevent /dev/input/event4 1 96 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_back:
+  alias: FireTV_Remote_Back
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 458993 && sendevent /dev/input/event4
+        1 158 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 458993 && sendevent /dev/input/event4 1 158 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_menu:
+  alias: FireTV_Remote_Menu
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 786496 && sendevent /dev/input/event4
+        1 139 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 786496 && sendevent /dev/input/event4 1 139 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_rewind:
+  alias: FireTV_Remote_Rewind
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 786612 && sendevent /dev/input/event4
+        1 168 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 786612 && sendevent /dev/input/event4 1 168 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_fastforward:
+  alias: FireTV_Remote_FastForward
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 786611 && sendevent /dev/input/event4
+        1 208 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 786611 && sendevent /dev/input/event4 1 208 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+firetv_remote_playpause:
+  alias: FireTV_Remote_PlayPause
+  sequence:
+  - service: androidtv.adb_command
+    data:
+      entity_id: media_player.fire_tv
+      command: sendevent /dev/input/event4 4 4 786637 && sendevent /dev/input/event4
+        1 164 1 && sendevent /dev/input/event4 0 0 0 && sendevent /dev/input/event4
+        4 4 786637 && sendevent /dev/input/event4 1 164 0 && sendevent /dev/input/event4
+        0 0 0
+  mode: restart
+notification_work_selection_actionable:
+  alias: 'notification: work selection (actionable)'
+  sequence:
+  - service: notify.mobile_app_phone_private_tillmann
+    data:
+      title: MEWS Project logger
+      message: Choose project to start logging time for
+      data:
+        channel: work
+        ledColor: blue
+        tag: work_select
+        timeout: 300
+        actions:
+        - action: AIR101
+          title: AIR101
+        - action: HOM04
+          title: HOM04
+        - action: PRO03
+          title: PRO03
+  mode: single
+test_create_event:
+  alias: 'TEST: Create Event'
+  sequence:
+  - service: o365.create_calendar_event
+    data:
+      calendar_id: AAMkADEwNzgwMjRmLWYxNzMtNGRlNS1iODQxLWY2Y2ZlMWEwN2EzMgBGAAAAAACfSFoWJ_DBQosu6qcDxQT1BwCwuwCjfkCHQbKmWv2bLqw-AAAAAAEGAACwuwCjfkCHQbKmWv2bLqw-AAALpp7qAAA=
+      subject: Clean up the garage
+      start: 2021-01-02T12:00:00+0100
+      end: 2021-01-02T12:30:00+0100
+      body: Remember to also clean out the gutters
+      location: 1600 Pennsylvania Ave Nw, Washington, DC 20500
+      sensitivity: Normal
+      show_as: Busy
+  mode: single
