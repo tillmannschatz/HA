@@ -7,12 +7,14 @@
 .storage
 .cloud
 .google.token
-.O365-token-cache
-notebooks
-themes
-tts
+.O365-token-cache/
+notebooks/
+themes/
+tts/
 custom_components/
 blueprints/
+image/
+www/
 
 # Ensure these YAML files are ignored, otherwise your secret data/credentials will leak.
 ip_bans.yaml
