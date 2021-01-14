@@ -1,15 +1,15 @@
 ################################################################################
 ############################## -LOAD MODULES- ##################################
 ################################################################################
-default_config:       # use default setup of Home Assistant (frontend, api, etc)
+default_config: # use default setup of Home Assistant (frontend, api, etc)
 frontend:
-  themes: !include_dir_merge_named themes                        # enable themes
-api:                  # expose a RESTful API for interaction with Home Assistant
+  themes: !include_dir_merge_named themes # enable themes
+api: # expose a RESTful API for interaction with Home Assistant
 
-media_extractor:                 # enable to send a stream URL to a media player
+media_extractor: # enable to send a stream URL to a media player
   default_query: best
 
-tts:                                                     # enable Text to speech
+tts: # enable Text to speech
   - platform: google_translate
     cache: true
     time_memory: 57600
@@ -18,11 +18,11 @@ tts:                                                     # enable Text to speech
 ############################## -Non GUI Setups- ################################
 ################################################################################
 
-recorder:                     # enable storing details of entities in a database
+recorder: # enable storing details of entities in a database
   db_url: !secret maria_db_url
   purge_keep_days: 90
   auto_purge: true
-  exclude:            # Eliminate anything that you never graph or refer back to
+  exclude: # Eliminate anything that you never graph or refer back to
     domains:
       - automation
       - updater
@@ -35,7 +35,7 @@ recorder:                     # enable storing details of entities in a database
       - sensor.*_update_state
       - sensor.date_*
 
-influxdb:                              # enable influxDB for timeseries analysis
+influxdb: # enable influxDB for timeseries analysis
   host: a0d7b954-influxdb
   port: 8086
   database: homeassistant
@@ -143,18 +143,19 @@ sensor:
         friendly_name: "Air purifier Air quality - Bedroom"
         unit_of_measurement: "AQI"
         value_template: '{{ state_attr("fan.xiaomi_miio_device", "aqi") }}'
-  - platform: yahoofinance
-    scan_interval:
-      minutes: 10
-    symbols:
-      - ^GSPC
-      - ^DJI
-      - ^IXIC
-      - ^RUT
-      - ^GDAXI
-      - IWDA.AS
-      - EIMI.L
-      - BTC-USD
+
+yahoofinance:
+  scan_interval:
+    minutes: 10
+  symbols:
+    - ^GSPC
+    - ^DJI
+    - ^IXIC
+    - ^RUT
+    - ^GDAXI
+    - IWDA.AS
+    - EIMI.L
+    - BTC-USD
 
 light:
   - platform: limitlessled
